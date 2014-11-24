@@ -31,8 +31,10 @@ when 'list'
 when 'switch'
   user = gituser[ARGS.first]
 
-  Open3.capture3 %|git config --local user.name "#{user['name']}"|
-  Open3.capture3 %|git config --local user.email "#{user['email']}"|
+  if Dir.exist? '.git'
+    Open3.capture3 %|git config --local user.name "#{user['name']}"|
+    Open3.capture3 %|git config --local user.email "#{user['email']}"|
+  end
 
   if user['private_key']
     private_key_path = "#{ENV['HOME']}/.ssh/#{user['private_key']}"
