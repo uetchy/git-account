@@ -9,6 +9,7 @@ $ git user switch andy
 User switched to <Andreas Iwata>
 $ git config user.name
 Andreas Iwata
+```
 
 ## Installation
 
