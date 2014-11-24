@@ -1,0 +1,8 @@
+john:
+  name: John Doe
+  email: john@example.com
+  private_key: id_rsa
+superco:
+  name: Super Corporation
+  email: info@super.co
+  private_key: github_superco_rsa

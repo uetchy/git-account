@@ -1,0 +1,54 @@
+#!/usr/bin/env ruby
+
+require 'yaml'
+require 'open3'
+
+QUERY = ARGV.first
+ARGS  = ARGV[1..-1]
+
+GU_CONFIG_PATH = ENV['HOME'] + '/.gituser'
+
+
+gituser = YAML.load_file(GU_CONFIG_PATH)
+
+case QUERY
+when 'list'
+  if Dir.exist? '.git'
+    puts "Current repo's config:"
+    git_author_name = `git config --local user.name`.strip
+    git_author_email = `git config --local user.email`.strip
+    puts "   name\t#{git_author_name}"
+    puts "   email\t#{git_author_email}"
+
+  end
+  puts "List of users:"
+  gituser.each do |key, value|
+    puts "   [#{key}]"
+    value.each do |element, content|
+      puts "      #{element}\t#{content}"
+    end
+  end
+when 'switch'
+  user = gituser[ARGS.first]
+
+  Open3.capture3 %|git config --local user.name "#{user['name']}"|
+  Open3.capture3 %|git config --local user.email "#{user['email']}"|
+
+  if user['private_key']
+    private_key_path = "#{ENV['HOME']}/.ssh/#{user['private_key']}"
+    Open3.capture3 %|ssh-add -D|
+    Open3.capture3 %|ssh-add #{private_key_path}|
+    Open3.capture3 %|git config --local remote.origin.gtprivatekeypath #{private_key_path}|
+  end
+
+  puts "User switched to <#{user['name']}>"
+when 'help'
+  puts <<-EOS
+    Usage:
+      git user list\t\tlist all 'users'
+      git user switch <user>\tswitch user
+      git user help\t\tshow this help
+  EOS
+else
+  puts "Usage: git user <command> [<args>]"
+end
