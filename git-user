@@ -3,16 +3,7 @@
 require 'yaml'
 require 'open3'
 
-QUERY = ARGV.first
-ARGS  = ARGV[1..-1]
-
-GU_CONFIG_PATH = ENV['HOME'] + '/.gituser'
-
-
-gituser = YAML.load_file(GU_CONFIG_PATH)
-
-case QUERY
-when 'list'
+def list_user
   if Dir.exist? '.git'
     puts "Current repo's config:"
     git_author_name = `git config --local user.name`.strip
@@ -28,9 +19,9 @@ when 'list'
       puts "      #{element}\t#{content}"
     end
   end
-when 'switch'
-  user = gituser[ARGS.first]
+end
 
+def switch_user(user)
   if Dir.exist? '.git'
     Open3.capture3 %|git config --local user.name "#{user['name']}"|
     Open3.capture3 %|git config --local user.email "#{user['email']}"|
@@ -43,12 +34,41 @@ when 'switch'
     Open3.capture3 %|git config --local remote.origin.gtprivatekeypath #{private_key_path}|
   end
 
-  puts "User switched to <#{user['name']}>"
+  if user['github']
+    gh_user = user['github']
+    system %|export GITHUB_USER="#{gh_user['user']}"|
+    system %|export GITHUB_PASSWORD="#{gh_user['token']}"|
+  end
+
+  puts "Switched user to <#{user['name']}>"
+  puts "   - Local git config" if Dir.exist?('.git')
+  puts "   - Local git private key" if user['private_key']
+  puts "   - Export Github credentials" if user['github']
+end
+
+QUERY = ARGV.first
+ARGS  = ARGV[1..-1]
+
+GU_CONFIG_PATH = ENV['HOME'] + '/.gituser'
+
+gituser = YAML.load_file(GU_CONFIG_PATH)
+
+case QUERY
+when 'list'
+  list_user
+when 'ls'
+  list_user
+when 'switch'
+  switch_user(gituser[ARGS.first])
+when 'sw'
+  switch_user(gituser[ARGS.first])
 when 'help'
   puts <<-EOS
     Usage:
       git user list\t\tlist all 'users'
+      git user ls\t\talias to 'list'
       git user switch <user>\tswitch user
+      git user sw <user>\talias to 'switch'
       git user help\t\tshow this help
   EOS
 else
