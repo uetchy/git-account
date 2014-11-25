@@ -54,6 +54,9 @@ john:
   name: John Doe
   email: john@example.com
   private_key: id_rsa
+  github:
+    user: john
+    token: sEcrEtToKEn
 superco:
   name: Super Corporation
   email: info@super.co
