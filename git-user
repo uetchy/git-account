@@ -15,6 +15,32 @@ $config = {
   :affect_git_hooks => true
 }
 
+def update_pre_push_script(label)
+  hook_script_path = ".git/hooks/pre-push"
+  hook_sentence = "git user switch #{label}"
+
+  unless File.exist?(hook_script_path)
+    FileUtils.touch(hook_script_path)
+    FileUtils.chmod(0755, hook_script_path)
+  end
+
+  hook_script_content = File.open(hook_script_path).read
+  exist = hook_script_content.split(/\r?\n/).any? do |line|
+    line.include?("git user switch")
+  end
+
+  File.open(hook_script_path, 'w') do |f|
+    if exist
+      # Replace line
+      f.write hook_script_content.gsub(%r|git user switch .+|, hook_sentence)
+    else
+      # Add line
+      f.puts hook_sentence
+    end
+  end
+
+end
+
 def list_user
   if Dir.exist? '.git'
     puts "Current repo's config:"
@@ -42,29 +68,7 @@ def switch_user(label, user)
 
     # Git hooks
     if $config[:affect_git_hooks]
-      hook_script_path = ".git/hooks/pre-push"
-      hook_sentence = "git user switch #{label}"
-
-      unless File.exist?(hook_script_path)
-        FileUtils.touch(hook_script_path)
-        FileUtils.chmod(0755, hook_script_path)
-      end
-
-      hook_script_content = File.open(hook_script_path).read
-      exist = hook_script_content.split(/\r?\n/).any? do |line|
-        line.include?("git user switch")
-      end
-
-      File.open(hook_script_path, 'w') do |f|
-        if exist
-          # Replace line
-          f.write hook_script_content.gsub(%r|git user switch .+|, hook_sentence)
-        else
-          # Add line
-          f.puts hook_sentence
-        end
-      end
-
+      update_pre_push_script(label)
     end
   end
 
@@ -99,6 +103,9 @@ when 'switch'
   switch_user(label, gituser[label])
 when 'sw'
   switch_user(label, gituser[label])
+when 'hooks'
+  puts "Update .git/hooks/pre-push"
+  update_pre_push_script(label)
 when 'help'
   puts <<-EOS
     Usage:
@@ -106,6 +113,7 @@ when 'help'
       git user ls\t\talias to 'list'
       git user switch <user>\tswitch user
       git user sw <user>\talias to 'switch'
+      git user hooks <user>\tSetup hook script for current git repository
       git user help\t\tshow this help
   EOS
 else
