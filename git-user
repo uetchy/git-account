@@ -1,7 +1,19 @@
 #!/usr/bin/env ruby
 
 require 'yaml'
+require 'fileutils'
 require 'open3'
+
+QUERY = ARGV.first
+ARGS  = ARGV[1..-1]
+
+GU_CONFIG_PATH = ENV['HOME'] + '/.gituser'
+
+gituser = YAML.load_file(GU_CONFIG_PATH)
+label = ARGS.first
+$config = {
+  :affect_git_hooks => true
+}
 
 def list_user
   if Dir.exist? '.git'
@@ -21,12 +33,42 @@ def list_user
   end
 end
 
-def switch_user(user)
+def switch_user(label, user)
+  # Git
   if Dir.exist? '.git'
+    # Git config -> name, email
     Open3.capture3 %|git config --local user.name "#{user['name']}"|
     Open3.capture3 %|git config --local user.email "#{user['email']}"|
+
+    # Git hooks
+    if $config[:affect_git_hooks]
+      hook_script_path = ".git/hooks/pre-push"
+      hook_sentence = "git user switch #{label}"
+
+      unless File.exist?(hook_script_path)
+        FileUtils.touch(hook_script_path)
+        FileUtils.chmod(0755, hook_script_path)
+      end
+
+      hook_script_content = File.open(hook_script_path).read
+      exist = hook_script_content.split(/\r?\n/).any? do |line|
+        line.include?("git user switch")
+      end
+
+      File.open(hook_script_path, 'w') do |f|
+        if exist
+          # Replace line
+          f.write hook_script_content.gsub(%r|git user switch .+|, hook_sentence)
+        else
+          # Add line
+          f.puts hook_sentence
+        end
+      end
+
+    end
   end
 
+  # Git config -> private key
   if user['private_key']
     private_key_path = "#{ENV['HOME']}/.ssh/#{user['private_key']}"
     Open3.capture3 %|ssh-add -D|
@@ -34,11 +76,13 @@ def switch_user(user)
     Open3.capture3 %|git config --local remote.origin.gtprivatekeypath #{private_key_path}|
   end
 
+  # Export github credentials
   if user['github']
     gh_user = user['github']
     system %|export GITHUB_USER="#{gh_user['user']}"|
     system %|export GITHUB_PASSWORD="#{gh_user['token']}"|
   end
+
 
   puts "Switched user to <#{user['name']}>"
   puts "   - Local git config" if Dir.exist?('.git')
@@ -46,22 +90,15 @@ def switch_user(user)
   puts "   - Export Github credentials" if user['github']
 end
 
-QUERY = ARGV.first
-ARGS  = ARGV[1..-1]
-
-GU_CONFIG_PATH = ENV['HOME'] + '/.gituser'
-
-gituser = YAML.load_file(GU_CONFIG_PATH)
-
 case QUERY
 when 'list'
   list_user
 when 'ls'
   list_user
 when 'switch'
-  switch_user(gituser[ARGS.first])
+  switch_user(label, gituser[label])
 when 'sw'
-  switch_user(gituser[ARGS.first])
+  switch_user(label, gituser[label])
 when 'help'
   puts <<-EOS
     Usage:
