@@ -17,7 +17,8 @@ $config = {
 
 def update_pre_push_script(label)
   hook_script_path = ".git/hooks/pre-push"
-  hook_sentence = "git user switch #{label}"
+  git_user_script_path = "/usr/local/bin/git-user"
+  hook_sentence = "#{git_user_script_path} switch #{label}"
 
   unless File.exist?(hook_script_path)
     FileUtils.touch(hook_script_path)
@@ -26,13 +27,13 @@ def update_pre_push_script(label)
 
   hook_script_content = File.open(hook_script_path).read
   exist = hook_script_content.split(/\r?\n/).any? do |line|
-    line.include?("git user switch")
+    line.include?(git_user_script_path)
   end
 
   File.open(hook_script_path, 'w') do |f|
     if exist
       # Replace line
-      f.write hook_script_content.gsub(%r|git user switch .+|, hook_sentence)
+      f.write hook_script_content.gsub(%r|#{git_user_script_path} switch .+|, hook_sentence)
     else
       # Add line
       f.puts hook_sentence
