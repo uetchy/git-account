@@ -11,36 +11,6 @@ GU_CONFIG_PATH = ENV['HOME'] + '/.gituser'
 
 gituser = YAML.load_file(GU_CONFIG_PATH)
 label = ARGS.first
-$config = {
-  :affect_git_hooks => true
-}
-
-def update_pre_push_script(label)
-  hook_script_path = ".git/hooks/pre-push"
-  git_user_script_path = "/usr/local/bin/git-user"
-  hook_sentence = "#{git_user_script_path} switch #{label}"
-
-  unless File.exist?(hook_script_path)
-    FileUtils.touch(hook_script_path)
-    FileUtils.chmod(0755, hook_script_path)
-  end
-
-  hook_script_content = File.open(hook_script_path).read
-  exist = hook_script_content.split(/\r?\n/).any? do |line|
-    line.include?(git_user_script_path)
-  end
-
-  File.open(hook_script_path, 'w') do |f|
-    if exist
-      # Replace line
-      f.write hook_script_content.gsub(%r|#{git_user_script_path} switch .+|, hook_sentence)
-    else
-      # Add line
-      f.puts hook_sentence
-    end
-  end
-
-end
 
 def list_user
   if Dir.exist? '.git'
@@ -66,11 +36,6 @@ def switch_user(label, user)
     # Git config -> name, email
     Open3.capture3 %|git config --local user.name "#{user['name']}"|
     Open3.capture3 %|git config --local user.email "#{user['email']}"|
-
-    # Git hooks
-    if $config[:affect_git_hooks]
-      update_pre_push_script(label)
-    end
   end
 
   # Git config -> private key
@@ -88,7 +53,6 @@ def switch_user(label, user)
     system %|export GITHUB_PASSWORD="#{gh_user['token']}"|
   end
 
-
   puts "Switched user to <#{user['name']}>"
   puts "   - Local git config" if Dir.exist?('.git')
   puts "   - Local git private key" if user['private_key']
@@ -104,9 +68,6 @@ when 'switch'
   switch_user(label, gituser[label])
 when 'sw'
   switch_user(label, gituser[label])
-when 'hooks'
-  puts "Update .git/hooks/pre-push"
-  update_pre_push_script(label)
 when 'help'
   puts <<-EOS
     Usage:
