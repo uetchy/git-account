@@ -43,7 +43,10 @@ def switch_user(label, user)
     private_key_path = "#{ENV['HOME']}/.ssh/#{user['private_key']}"
     Open3.capture3 %|ssh-add -D|
     Open3.capture3 %|ssh-add #{private_key_path}|
-    Open3.capture3 %|git config --local remote.origin.gtprivatekeypath #{private_key_path}|
+    remote_list = `git config --local --get-regexp remote\..+?\.url`.split(/\r?\n/).map{|s| s.scan(/^remote\.(.+?)\.url/)[0][0]}
+    remote_list.each do |remote|
+      Open3.capture3 %|git config --local remote.#{remote}.gtprivatekeypath #{private_key_path}|
+    end
   end
 
   # Export github credentials
