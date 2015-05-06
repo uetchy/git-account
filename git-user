@@ -50,7 +50,7 @@ def switch_user(label, user)
   end
 
   # Export github credentials
-  if user['github']
+  if user['env']
     gh_user = user['github']
     system %|export GITHUB_USER="#{gh_user['user']}"|
     system %|export GITHUB_PASSWORD="#{gh_user['token']}"|
