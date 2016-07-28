@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require 'git/user'
 require 'yaml'
 require 'fileutils'
 require 'open3'
@@ -21,7 +22,7 @@ def list_user
     puts "   email\t#{git_author_email}"
 
   end
-  puts "List of users:"
+  puts 'List of users:'
   gituser.each do |key, value|
     puts "   [#{key}]"
     value.each do |element, content|
@@ -30,36 +31,30 @@ def list_user
   end
 end
 
-def switch_user(label, user)
+def switch_user(user)
   # Git
   if Dir.exist? '.git'
     # Git config -> name, email
-    Open3.capture3 %|git config --local user.name "#{user['name']}"|
-    Open3.capture3 %|git config --local user.email "#{user['email']}"|
+    Open3.capture3 %(git config --local user.name "#{user['name']}")
+    Open3.capture3 %(git config --local user.email "#{user['email']}")
   end
 
   # Git config -> private key
   if user['private_key']
     private_key_path = "#{ENV['HOME']}/.ssh/#{user['private_key']}"
-    Open3.capture3 %|ssh-add -D|
-    Open3.capture3 %|ssh-add #{private_key_path}|
-    remote_list = `git config --local --get-regexp remote\..+?\.url`.split(/\r?\n/).map{|s| s.scan(/^remote\.(.+?)\.url/)[0][0]}
-    remote_list.each do |remote|
-      Open3.capture3 %|git config --local remote.#{remote}.gtprivatekeypath #{private_key_path}|
-    end
+    system %(git config --local remote.origin.gtprivatekeypath #{private_key_path})
   end
 
   # Export github credentials
   if user['env']
     gh_user = user['github']
-    system %|export GITHUB_USER="#{gh_user['user']}"|
-    system %|export GITHUB_PASSWORD="#{gh_user['token']}"|
+    system %(export GITHUB_USER="#{gh_user['user']}")
+    system %(export GITHUB_PASSWORD="#{gh_user['token']}")
   end
 
   puts "Switched user to <#{user['name']}>"
-  puts "   - Local git config" if Dir.exist?('.git')
-  puts "   - Local git private key" if user['private_key']
-  puts "   - Export Github credentials" if user['github']
+  puts '   - Local git private key' if user['private_key']
+  puts '   - Export Github credentials' if user['github']
 end
 
 case QUERY
@@ -82,5 +77,5 @@ when 'help'
       git user help\t\tshow this help
   EOS
 else
-  puts "Usage: git user <command> [<args>]"
+  puts 'Usage: git user <command> [<args>]'
 end
