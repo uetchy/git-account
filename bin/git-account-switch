@@ -2,12 +2,12 @@
 
 const program = require('commander');
 const inquirer = require('inquirer');
-const gitUser = require('..');
+const gitAccount = require('..');
 
 program
   .parse(process.argv);
 
-const users = gitUser.listUsers();
+const users = gitAccount.listUsers();
 
 inquirer.prompt([{
 	type: 'list',
@@ -20,7 +20,7 @@ inquirer.prompt([{
 }]).then(answers => {
 	const {user} = answers;
 	console.log(user);
-	gitUser.switchUser(user).then(result => {
+	gitAccount.switchAccount(user).then(result => {
 		console.log(result);
 	});
 });

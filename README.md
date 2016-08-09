@@ -1,11 +1,11 @@
-# git-user
+# git-account
 
-This script adds user management feature to `git`. It makes you able to change __user.name__, __user.email__ and __private key__ easily.
+`git-account` adds user management feature to `git`. It makes you able to change __user.name__, __user.email__ and __private key__ at ease.
 
 ```console
 $ git config user.name
 John Doe
-$ git user switch andy
+$ git account switch andy
 User switched to <Andreas Iwata>
 $ git config user.name
 Andreas Iwata
@@ -15,7 +15,7 @@ Andreas Iwata
 $ git clone git@github.com:uetchy/private-repo.git
 Cloning into 'private-repo'...
 ERROR: Repository not found.
-$ git user switch uetchy
+$ git account switch uetchy
 User switched to <Yasuaki Uechi>
 $ git clone git@github.com:uetchy/private-repo.git
 Cloning into 'private-repo'...
@@ -25,27 +25,27 @@ remote: Counting objects: 59, done.
 ## Installation
 
 ```console
-$ git clone https://github.com/uetchy/git-user.git
-$ cd git-user
-$ cp git-user /path/to/git-user # e.g. /usr/local/bin
-$ chmod +x /path/to/git-user
+$ git clone https://github.com/uetchy/git-account.git
+$ cd git-account
+$ cp git-account /path/to/git-account # e.g. /usr/local/bin
+$ chmod +x /path/to/git-account
 ```
 
 ## Usage
 
 ```console
-$ git user <command> [<args>]
+$ git account <command> [<args>]
 ```
 
 ### Commands
 
 ```console
-$ git user # show the list of commands
-$ git user list # show the list of choosable users
-$ git user switch <user> # switch user of current repository
+$ git account # show the list of commands
+$ git account list # show the list of choosable users
+$ git account switch <user> # switch user of current repository
 ```
 
-### .gituser
+### .git-account
 
 Example configuration is here.
 
@@ -63,11 +63,11 @@ superco:
   private_key: github_superco_rsa
 ```
 
-That configuration must be named __.gituser__ and placed in __HOME__ directory.
+That configuration must be named __.git-account__ and placed in __HOME__ directory.
 
-You can use __gituser.sample__ for making .gituser easily.
+You can use __git-account.sample__ for making .gituser easily.
 
 ```console
-$ cp gituser.sample ~/.gituser
-$ vim ~/.gituser
+$ cp git-account.sample ~/.git-account
+$ vim ~/.git-account
 ```

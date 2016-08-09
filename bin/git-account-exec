@@ -1,14 +1,13 @@
 #!/usr/bin/env node
 
 const program = require('commander');
-const {argv} = require('yargs');
-const gitUser = require('..');
+const gitAccount = require('..');
 
 program
   .parse(process.argv);
 
-const command = argv._;
-gitUser.execCommand(command.join(' '))
+const command = program.args;
+gitAccount.execCommand(command)
 .then(result => {
 	console.log(result);
 })

@@ -19,7 +19,7 @@ const LOCAL_CONFIG_EXPECTED = { // eslint-disable-line quote-props
 		name: 'Local Officer', email: 'local.officer@example.com'
 	},
 	'remote "origin"': {
-		url: 'ssh://git@github.com/uetchy/git-user',
+		url: 'ssh://git@github.com/uetchy/git-account',
 		fetch: '+refs/heads/*:refs/remotes/origin/*',
 		gtPrivateKeyPath: '~/.ssh/id_rsa_local_officer'
 	},
