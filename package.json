@@ -1,11 +1,14 @@
 {
   "name": "git-account",
   "version": "1.0.0",
-  "description": "This script adds user management feature to `git`. It makes you able to change __user.name__, __user.email__ and __private key__ easily.",
+  "description": "git-account adds user management feature to `git`.",
   "main": "lib",
   "scripts": {
     "test": "xo && nyc ava",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
+  },
+  "bin": {
+    "git-account": "bin/git-account"
   },
   "repository": {
     "type": "git",
@@ -35,15 +38,5 @@
     "mockery": "^1.7.0",
     "nyc": "^7.1.0",
     "xo": "^0.16.0"
-  },
-  "bin": {
-    "git-account": "bin/git-account"
-  },
-  "xo": {
-    "esnext": true,
-    "envs": [
-      "node",
-      "mocha"
-    ]
   }
 }
