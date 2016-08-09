@@ -1,0 +1,17 @@
+#!/usr/bin/env node
+
+const program = require('commander');
+const chalk = require('chalk');
+const gitUser = require('..');
+
+program
+  .parse(process.argv);
+
+const users = gitUser.listUsers();
+
+console.log('=== users');
+
+users.forEach(user => {
+	console.log('\n', chalk.green(`${user.name} <${user.email}>`));
+	console.log(chalk.gray(JSON.stringify(user, null, '  ')));
+});

@@ -1,0 +1,12 @@
+#!/usr/bin/env node
+
+const program = require('commander');
+const {version} = require('../package.json');
+
+program
+  .version(version)
+  .command('list', 'List users')
+  .command('switch [name]', 'Switch user')
+  .command('exec', 'Run command')
+  .parse(process.argv);
+

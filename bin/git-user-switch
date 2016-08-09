@@ -1,0 +1,26 @@
+#!/usr/bin/env node
+
+const program = require('commander');
+const inquirer = require('inquirer');
+const gitUser = require('..');
+
+program
+  .parse(process.argv);
+
+const users = gitUser.listUsers();
+
+inquirer.prompt([{
+	type: 'list',
+	name: 'user',
+	message: 'choose one',
+	choices: users.map(value => ({
+		name: `${value.name} <${value.email}>`,
+		value
+	}))
+}]).then(answers => {
+	const {user} = answers;
+	console.log(user);
+	gitUser.switchUser(user).then(result => {
+		console.log(result);
+	});
+});
