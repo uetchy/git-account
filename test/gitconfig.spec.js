@@ -1,19 +1,18 @@
-const {homedir} = require('os');
-const {resolve} = require('path');
-const fs = require('fs');
-const assert = require('assert');
-const mockery = require('mockery');
+import {homedir} from 'os';
+import fs from 'fs';
+import test from 'ava';
+import mockery from 'mockery';
 
 const gitconfigPath = '../lib/gitconfig';
 
-const GLOBAL_CONFIG_SOURCE = fs.readFileSync('./test/fixture/global_config', 'utf-8');
+const GLOBAL_CONFIG_SOURCE = fs.readFileSync('./fixture/global_config', 'utf-8');
 const GLOBAL_CONFIG_EXPECTED = {
 	user: {
 		name: 'Globe Trotter',
 		email: 'globe.trotter@example.com'
 	}
 };
-const LOCAL_CONFIG_SOURCE = fs.readFileSync('./test/fixture/local_config', 'utf-8');
+const LOCAL_CONFIG_SOURCE = fs.readFileSync('./fixture/local_config', 'utf-8');
 const LOCAL_CONFIG_EXPECTED = { // eslint-disable-line quote-props
 	user: {
 		name: 'Local Officer', email: 'local.officer@example.com'
@@ -29,56 +28,50 @@ const LOCAL_CONFIG_EXPECTED = { // eslint-disable-line quote-props
 	}
 };
 
-describe('gitconfig', () => {
-	describe('#getGlobalConfig()', () => {
-		it('should return git global config', () => {
-			const fsMock = {
-				readFileSync: path => {
-					assert.equal(path, resolve(homedir(), '.gitconfig'));
-					return GLOBAL_CONFIG_SOURCE;
-				}
-			};
+test('get global gitconfig', t => {
+	const fsMock = {
+		readFileSync: path => {
+			t.is(path, `${homedir()}/.gitconfig`);
+			return GLOBAL_CONFIG_SOURCE;
+		}
+	};
 
-			mockery.registerAllowable(gitconfigPath);
-			mockery.registerMock('fs', fsMock);
-			mockery.enable({
-				useCleanCache: true,
-				warnOnReplace: false,
-				warnOnUnregistered: false
-			});
-
-			const gitconfig = require(gitconfigPath);
-
-			assert.deepEqual(gitconfig.getGlobalConfig(), GLOBAL_CONFIG_EXPECTED);
-
-			mockery.disable();
-			mockery.deregisterAll();
-		});
+	mockery.registerAllowable(gitconfigPath);
+	mockery.registerMock('fs', fsMock);
+	mockery.enable({
+		useCleanCache: true,
+		warnOnReplace: false,
+		warnOnUnregistered: false
 	});
 
-	describe('#getLocalConfig()', () => {
-		it('should return git local config', () => {
-			const fsMock = {
-				readFileSync: path => {
-					assert.equal(path, resolve('.git', 'config'));
-					return LOCAL_CONFIG_SOURCE;
-				}
-			};
+	const gitconfig = require(gitconfigPath);
 
-			mockery.registerAllowable(gitconfigPath);
-			mockery.registerMock('fs', fsMock);
-			mockery.enable({
-				useCleanCache: true,
-				warnOnReplace: false,
-				warnOnUnregistered: false
-			});
+	t.deepEqual(gitconfig.getGlobalConfig(), GLOBAL_CONFIG_EXPECTED);
 
-			const gitconfig = require(gitconfigPath);
+	mockery.disable();
+	mockery.deregisterAll();
+});
 
-			assert.deepEqual(gitconfig.getLocalConfig(), LOCAL_CONFIG_EXPECTED);
+test('get local gitconfig', t => {
+	const fsMock = {
+		readFileSync: path => {
+			t.is(path, `${process.cwd()}/.git/config`);
+			return LOCAL_CONFIG_SOURCE;
+		}
+	};
 
-			mockery.disable();
-			mockery.deregisterAll();
-		});
+	mockery.registerAllowable(gitconfigPath);
+	mockery.registerMock('fs', fsMock);
+	mockery.enable({
+		useCleanCache: true,
+		warnOnReplace: false,
+		warnOnUnregistered: false
 	});
+
+	const gitconfig = require(gitconfigPath);
+
+	t.deepEqual(gitconfig.getLocalConfig(), LOCAL_CONFIG_EXPECTED);
+
+	mockery.disable();
+	mockery.deregisterAll();
 });

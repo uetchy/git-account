@@ -4,7 +4,8 @@
   "description": "This script adds user management feature to `git`. It makes you able to change __user.name__, __user.email__ and __private key__ easily.",
   "main": "lib",
   "scripts": {
-    "test": "mocha && xo"
+    "test": "xo && nyc ava",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {
     "type": "git",
@@ -29,8 +30,10 @@
     "inquirer": "^1.1.2"
   },
   "devDependencies": {
-    "mocha": "^3.0.1",
+    "ava": "^0.16.0",
+    "coveralls": "^2.11.12",
     "mockery": "^1.7.0",
+    "nyc": "^7.1.0",
     "xo": "^0.16.0"
   },
   "bin": {
