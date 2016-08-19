@@ -2,16 +2,25 @@
 
 const program = require('commander');
 const chalk = require('chalk');
+const columnify = require('columnify');
+
 const gitAccount = require('..');
 
-program
-  .parse(process.argv);
+program.parse(process.argv);
 
-const users = gitAccount.listUsers();
-
-console.log('=== users');
-
-users.forEach(user => {
-	console.log('\n', chalk.green(`${user.name} <${user.email}>`));
-	console.log(chalk.gray(JSON.stringify(user, null, '  ')));
-});
+gitAccount.loadConfig()
+	.then(users => {
+		// users.forEach(user => {
+		// 	console.log('\n', chalk.green(`${user.name} <${user.email}>`));
+		// 	console.log(chalk.gray(JSON.stringify(user, null, '  ')));
+		// });
+		console.log(columnify(users, {
+			config: {
+				id: {showHeaders: false}
+			}
+		}));
+	})
+	.catch(err => {
+		console.log(chalk.red('Cannot find config file'), err.message);
+		console.log('Put config on', chalk.green('~/.git-account'));
+	});

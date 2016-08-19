@@ -3,14 +3,9 @@
 const program = require('commander');
 const gitAccount = require('..');
 
-program
-  .parse(process.argv);
+program.parse(process.argv);
 
 const command = program.args;
 gitAccount.execCommand(command)
-.then(result => {
-	console.log(result);
-})
-.catch(err => {
-	console.log(err.message);
-});
+	.then(result => console.log(result))
+	.catch(err => console.log(err.message));

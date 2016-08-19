@@ -28,7 +28,7 @@ const LOCAL_CONFIG_EXPECTED = { // eslint-disable-line quote-props
 	}
 };
 
-test('get global gitconfig', t => {
+test.serial('get global gitconfig', async t => {
 	const fsMock = {
 		readFileSync: path => {
 			t.is(path, `${homedir()}/.gitconfig`);
@@ -45,14 +45,15 @@ test('get global gitconfig', t => {
 	});
 
 	const gitconfig = require(gitconfigPath);
+	const config = await gitconfig.getGlobalConfig();
 
-	t.deepEqual(gitconfig.getGlobalConfig(), GLOBAL_CONFIG_EXPECTED);
+	t.deepEqual(config, GLOBAL_CONFIG_EXPECTED);
 
 	mockery.disable();
 	mockery.deregisterAll();
 });
 
-test('get local gitconfig', t => {
+test.serial('get local gitconfig', async t => {
 	const fsMock = {
 		readFileSync: path => {
 			t.is(path, `${process.cwd()}/.git/config`);
@@ -69,8 +70,9 @@ test('get local gitconfig', t => {
 	});
 
 	const gitconfig = require(gitconfigPath);
+	const config = await gitconfig.getLocalConfig();
 
-	t.deepEqual(gitconfig.getLocalConfig(), LOCAL_CONFIG_EXPECTED);
+	t.deepEqual(config, LOCAL_CONFIG_EXPECTED);
 
 	mockery.disable();
 	mockery.deregisterAll();
