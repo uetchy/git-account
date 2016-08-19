@@ -1,0 +1,43 @@
+#!/usr/bin/env node
+
+const os = require('os');
+const path = require('path');
+const program = require('commander');
+const chalk = require('chalk');
+const inquirer = require('inquirer');
+const columnify = require('columnify');
+
+const gitAccount = require('..');
+
+program.parse(process.argv);
+
+const questions = [
+	{
+		name: 'id',
+		message: 'ID',
+		default: 'john'
+	},
+	{
+		name: 'name',
+		message: 'Name',
+		default: 'John Doe'
+	},
+	{
+		name: 'email',
+		message: 'Email',
+		default: 'john.doe@example.com'
+	},
+	{
+		name: 'privateKey',
+		message: 'Private Key',
+		default: path.resolve(os.homedir(), '.ssh/id_rsa')
+	}
+];
+
+inquirer.prompt(questions)
+	.then(answers => gitAccount.addUser(answers))
+	.then(user => {
+		console.log(chalk.green('User created'));
+		console.log(columnify(user));
+	})
+	.catch(err => console.log(err.message));

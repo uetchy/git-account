@@ -1,0 +1,18 @@
+#!/usr/bin/env node
+
+const program = require('commander');
+const chalk = require('chalk');
+const columnify = require('columnify');
+
+const gitAccount = require('..');
+
+program.parse(process.argv);
+
+gitAccount.getCurrentUser()
+	.then(user => {
+		console.log(columnify(user));
+	})
+	.catch(err => {
+		console.log(chalk.red('Cannot find config file'), err.message);
+		console.log('Put config on', chalk.green('~/.git-account'));
+	});

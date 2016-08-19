@@ -1,0 +1,22 @@
+#!/usr/bin/env node
+
+const program = require('commander');
+const chalk = require('chalk');
+const inquirer = require('inquirer');
+
+const gitAccount = require('..');
+
+program.parse(process.argv);
+
+const questions = [
+	{
+		name: 'id',
+		message: 'ID',
+		default: program.args[0]
+	}
+];
+
+inquirer.prompt(questions)
+	.then(answers => gitAccount.removeUser(answers.id))
+	.then(id => console.log(chalk.green('User removed:'), id))
+	.catch(err => console.log(err.message));

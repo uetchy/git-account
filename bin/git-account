@@ -5,8 +5,10 @@ const {version} = require('../package.json');
 
 program
   .version(version)
+  .command('status', 'Show current status')
   .command('list', 'List users')
   .command('switch [name]', 'Switch user')
   .command('exec', 'Run command')
+  .command('add', 'Add user')
+  .command('remove', 'Remove user')
   .parse(process.argv);
-
