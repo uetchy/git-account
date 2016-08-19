@@ -5,7 +5,8 @@
   "main": "lib",
   "scripts": {
     "test": "xo && nyc ava",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "release": "standard-version"
   },
   "bin": {
     "git-account": "bin/git-account"
@@ -39,6 +40,7 @@
     "coveralls": "^2.11.12",
     "mockery": "^1.7.0",
     "nyc": "^7.1.0",
+    "standard-version": "^2.4.0",
     "xo": "^0.16.0"
   }
 }
