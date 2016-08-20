@@ -33,7 +33,8 @@
     "file-exists": "^2.0.0",
     "ini": "^1.3.4",
     "inquirer": "^1.1.2",
-    "pify": "^2.3.0"
+    "pify": "^2.3.0",
+    "update-notifier": "^1.0.2"
   },
   "devDependencies": {
     "ava": "^0.16.0",
