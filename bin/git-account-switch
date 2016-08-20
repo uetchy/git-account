@@ -3,26 +3,27 @@
 const program = require('commander');
 const inquirer = require('inquirer');
 const chalk = require('chalk');
+const columnify = require('columnify');
 
-const gitAccount = require('..');
+const lib = require('..');
 
 program.parse(process.argv);
 
-gitAccount.loadConfig()
+lib.loadConfig()
 	.then(users => {
-		const question = [{
+		return inquirer.prompt([{
 			type: 'list',
 			name: 'user',
-			message: 'choose one',
+			message: 'select account',
 			choices: users.map(value => ({
 				name: `${value.name} <${value.email}>`,
 				value
 			}))
-		}];
-		return inquirer.prompt(question);
+		}]);
 	})
-	.then(answers => {
-		gitAccount.switchAccount(answers.user)
-			.then(() => console.log(chalk.green('Switched')));
+	.then(answers => lib.switchAccount(answers.user))
+	.then(user => {
+		console.log(chalk.green('switched'));
+		console.log(columnify(user));
 	})
 	.catch(err => console.log(err.message));

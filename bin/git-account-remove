@@ -4,19 +4,22 @@ const program = require('commander');
 const chalk = require('chalk');
 const inquirer = require('inquirer');
 
-const gitAccount = require('..');
+const lib = require('..');
 
 program.parse(process.argv);
 
-const questions = [
-	{
-		name: 'id',
-		message: 'ID',
-		default: program.args[0]
-	}
-];
-
-inquirer.prompt(questions)
-	.then(answers => gitAccount.removeUser(answers.id))
-	.then(id => console.log(chalk.green('User removed:'), id))
+lib.loadConfig()
+	.then(users => {
+		return inquirer.prompt([{
+			type: 'list',
+			name: 'user',
+			message: 'select account to remove',
+			choices: users.map(value => ({
+				name: `${value.name} <${value.email}>`,
+				value
+			}))
+		}]);
+	})
+	.then(answers => lib.removeUser(answers.user.id))
+	.then(() => console.log(chalk.green('removed')))
 	.catch(err => console.log(err.message));

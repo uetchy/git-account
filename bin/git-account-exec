@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 
 const program = require('commander');
-const gitAccount = require('..');
+
+const lib = require('..');
 
 program.parse(process.argv);
 
 const command = program.args;
-gitAccount.execCommand(command)
+lib.execCommand(command)
 	.then(result => console.log(result))
 	.catch(err => console.log(err.message));

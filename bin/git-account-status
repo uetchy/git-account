@@ -4,15 +4,15 @@ const program = require('commander');
 const chalk = require('chalk');
 const columnify = require('columnify');
 
-const gitAccount = require('..');
+const lib = require('..');
 
 program.parse(process.argv);
 
-gitAccount.getCurrentUser()
+lib.getCurrentUser()
 	.then(user => {
-		console.log(columnify(user));
+		console.log(columnify(user, {showHeaders: false}));
 	})
 	.catch(err => {
-		console.log(chalk.red('Cannot find config file'), err.message);
-		console.log('Put config on', chalk.green('~/.git-account'));
+		console.log(chalk.red('cannot find config file'), err.message);
+		console.log('put config on', chalk.green('~/.git-account'));
 	});

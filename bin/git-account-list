@@ -4,23 +4,19 @@ const program = require('commander');
 const chalk = require('chalk');
 const columnify = require('columnify');
 
-const gitAccount = require('..');
+const lib = require('..');
 
 program.parse(process.argv);
 
-gitAccount.loadConfig()
+lib.loadConfig()
 	.then(users => {
 		// users.forEach(user => {
 		// 	console.log('\n', chalk.green(`${user.name} <${user.email}>`));
 		// 	console.log(chalk.gray(JSON.stringify(user, null, '  ')));
 		// });
-		console.log(columnify(users, {
-			config: {
-				id: {showHeaders: false}
-			}
-		}));
+		console.log(columnify(users));
 	})
 	.catch(err => {
-		console.log(chalk.red('Cannot find config file'), err.message);
-		console.log('Put config on', chalk.green('~/.git-account'));
+		console.log(chalk.red('cannot find config file'), err.message);
+		console.log('put config on', chalk.green('~/.git-account'));
 	});

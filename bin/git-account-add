@@ -7,7 +7,7 @@ const chalk = require('chalk');
 const inquirer = require('inquirer');
 const columnify = require('columnify');
 
-const gitAccount = require('..');
+const lib = require('..');
 
 program.parse(process.argv);
 
@@ -30,14 +30,15 @@ const questions = [
 	{
 		name: 'privateKey',
 		message: 'Private Key',
-		default: path.resolve(os.homedir(), '.ssh/id_rsa')
+		default: path.resolve(os.homedir(), '.ssh/id_rsa'),
+		filter: input => input.replace(/^~($|\/|\\)/, `${os.homedir()}$1`)
 	}
 ];
 
 inquirer.prompt(questions)
-	.then(answers => gitAccount.addUser(answers))
+	.then(answers => lib.addUser(answers))
 	.then(user => {
-		console.log(chalk.green('User created'));
-		console.log(columnify(user));
+		console.log(chalk.green('created'));
+		console.log(columnify(user), {showHeaders: false});
 	})
 	.catch(err => console.log(err.message));
