@@ -39,6 +39,6 @@ inquirer.prompt(questions)
 	.then(answers => lib.addUser(answers))
 	.then(user => {
 		console.log(chalk.green('created'));
-		console.log(columnify(user), {showHeaders: false});
+		console.log(columnify(user, {showHeaders: false}));
 	})
 	.catch(err => console.log(err.message));
