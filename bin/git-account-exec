@@ -6,7 +6,8 @@ const lib = require('..');
 
 program.parse(process.argv);
 
-const command = program.args;
+const command = process.argv.slice(2);
+
 lib.execCommand(command)
 	.then(result => console.log(result))
 	.catch(err => console.log(err.message));
