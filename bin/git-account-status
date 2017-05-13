@@ -1,18 +1,19 @@
 #!/usr/bin/env node
 
-const program = require('commander');
-const chalk = require('chalk');
-const columnify = require('columnify');
+const program = require('commander')
+const chalk = require('chalk')
+const columnify = require('columnify')
 
-const lib = require('..');
+const lib = require('..')
 
-program.parse(process.argv);
+program.parse(process.argv)
 
-lib.getCurrentUser()
-	.then(user => {
-		console.log(columnify(user, {showHeaders: false}));
-	})
-	.catch(err => {
-		console.log(chalk.red('cannot find config file'), err.message);
-		console.log('put config on', chalk.green('~/.git-account'));
-	});
+lib
+  .getCurrentUser()
+  .then(user => {
+    console.log(columnify(user, { showHeaders: false }))
+  })
+  .catch(err => {
+    console.log(chalk.red('cannot find config file'), err.message)
+    console.log('put config on', chalk.green('~/.git-account'))
+  })

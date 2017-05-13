@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 
-const program = require('commander');
+const program = require('commander')
 
-const lib = require('..');
+const lib = require('..')
 
-program.parse(process.argv);
+program.parse(process.argv)
 
-const command = process.argv.slice(2);
+const command = process.argv.slice(2)
 
-lib.execCommand(command)
-	.then(result => console.log(result))
-	.catch(err => console.log(err.message));
+lib
+  .execCommand(command)
+  .then(result => console.log(result))
+  .catch(err => console.log(err.message))

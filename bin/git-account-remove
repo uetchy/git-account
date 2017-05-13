@@ -1,25 +1,28 @@
 #!/usr/bin/env node
 
-const program = require('commander');
-const chalk = require('chalk');
-const inquirer = require('inquirer');
+const program = require('commander')
+const chalk = require('chalk')
+const inquirer = require('inquirer')
 
-const lib = require('..');
+const lib = require('..')
 
-program.parse(process.argv);
+program.parse(process.argv)
 
-lib.loadConfig()
-	.then(users => {
-		return inquirer.prompt([{
-			type: 'list',
-			name: 'user',
-			message: 'select account to remove',
-			choices: users.map(value => ({
-				name: `${value.name} <${value.email}>`,
-				value
-			}))
-		}]);
-	})
-	.then(answers => lib.removeUser(answers.user.id))
-	.then(() => console.log(chalk.green('removed')))
-	.catch(err => console.log(err.message));
+lib
+  .loadConfig()
+  .then(users => {
+    return inquirer.prompt([
+      {
+        type: 'list',
+        name: 'user',
+        message: 'select account to remove',
+        choices: users.map(value => ({
+          name: `${value.name} <${value.email}>`,
+          value
+        }))
+      }
+    ])
+  })
+  .then(answers => lib.removeUser(answers.user.id))
+  .then(() => console.log(chalk.green('removed')))
+  .catch(err => console.log(err.message))

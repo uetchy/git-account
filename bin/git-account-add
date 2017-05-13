@@ -1,44 +1,45 @@
 #!/usr/bin/env node
 
-const os = require('os');
-const path = require('path');
-const program = require('commander');
-const chalk = require('chalk');
-const inquirer = require('inquirer');
-const columnify = require('columnify');
+const os = require('os')
+const path = require('path')
+const program = require('commander')
+const chalk = require('chalk')
+const inquirer = require('inquirer')
+const columnify = require('columnify')
 
-const lib = require('..');
+const lib = require('..')
 
-program.parse(process.argv);
+program.parse(process.argv)
 
 const questions = [
-	{
-		name: 'id',
-		message: 'ID',
-		default: 'john'
-	},
-	{
-		name: 'name',
-		message: 'Name',
-		default: 'John Doe'
-	},
-	{
-		name: 'email',
-		message: 'Email',
-		default: 'john.doe@example.com'
-	},
-	{
-		name: 'privateKey',
-		message: 'Private Key',
-		default: path.resolve(os.homedir(), '.ssh/id_rsa'),
-		filter: input => input.replace(/^~($|\/|\\)/, `${os.homedir()}$1`)
-	}
-];
+  {
+    name: 'id',
+    message: 'ID',
+    default: 'john'
+  },
+  {
+    name: 'name',
+    message: 'Name',
+    default: 'John Doe'
+  },
+  {
+    name: 'email',
+    message: 'Email',
+    default: 'john.doe@example.com'
+  },
+  {
+    name: 'privateKey',
+    message: 'Private Key',
+    default: path.resolve(os.homedir(), '.ssh/id_rsa'),
+    filter: input => input.replace(/^~($|\/|\\)/, `${os.homedir()}$1`)
+  }
+]
 
-inquirer.prompt(questions)
-	.then(answers => lib.addUser(answers))
-	.then(user => {
-		console.log(chalk.green('created'));
-		console.log(columnify(user, {showHeaders: false}));
-	})
-	.catch(err => console.log(err.message));
+inquirer
+  .prompt(questions)
+  .then(answers => lib.addUser(answers))
+  .then(user => {
+    console.log(chalk.green('created'))
+    console.log(columnify(user, { showHeaders: false }))
+  })
+  .catch(err => console.log(err.message))

@@ -1,29 +1,32 @@
 #!/usr/bin/env node
 
-const program = require('commander');
-const inquirer = require('inquirer');
-const chalk = require('chalk');
-const columnify = require('columnify');
+const program = require('commander')
+const inquirer = require('inquirer')
+const chalk = require('chalk')
+const columnify = require('columnify')
 
-const lib = require('..');
+const lib = require('..')
 
-program.parse(process.argv);
+program.parse(process.argv)
 
-lib.loadConfig()
-	.then(users => {
-		return inquirer.prompt([{
-			type: 'list',
-			name: 'user',
-			message: 'select account',
-			choices: users.map(value => ({
-				name: `${value.name} <${value.email}>`,
-				value
-			}))
-		}]);
-	})
-	.then(answers => lib.switchAccount(answers.user))
-	.then(user => {
-		console.log(chalk.green('switched'));
-		console.log(columnify(user));
-	})
-	.catch(err => console.log(err.message));
+lib
+  .loadConfig()
+  .then(users => {
+    return inquirer.prompt([
+      {
+        type: 'list',
+        name: 'user',
+        message: 'select account',
+        choices: users.map(value => ({
+          name: `${value.name} <${value.email}>`,
+          value
+        }))
+      }
+    ])
+  })
+  .then(answers => lib.switchAccount(answers.user))
+  .then(user => {
+    console.log(chalk.green('switched'))
+    console.log(columnify(user))
+  })
+  .catch(err => console.log(err.message))
