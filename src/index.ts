@@ -1,14 +1,14 @@
-const { homedir } = require('os')
-const fs = require('fs')
-const { join } = require('path')
-const pify = require('pify')
-const execa = require('execa')
-const fileExists = require('file-exists')
-const gitconfig = require('./gitconfig')
+import { homedir } from 'os'
+import fs from 'fs'
+import { join } from 'path'
+import pify from 'pify'
+import execa from 'execa'
+import fileExists from 'file-exists'
+import * as gitconfig from './gitconfig'
 
 const CONFIG_PATH = join(homedir(), '.git-account')
 
-function addUser(user) {
+export function addUser(user: User) {
   return new Promise(async (resolve, reject) => {
     try {
       const config = await loadConfig()
@@ -20,11 +20,11 @@ function addUser(user) {
   })
 }
 
-function removeUser(id) {
+export function removeUser(id: string) {
   return new Promise(async (resolve, reject) => {
     try {
       const config = await loadConfig()
-      writeConfig(config.filter(user => user.id !== id))
+      writeConfig(config.filter((user: User) => user.id !== id))
       resolve(id)
     } catch (err) {
       reject(err)
@@ -32,8 +32,8 @@ function removeUser(id) {
   })
 }
 
-function writeConfig(config) {
-  return new Promise(async (resolve, reject) => {
+export function writeConfig(config: Config) {
+  return new Promise<Config>(async (resolve, reject) => {
     const data = JSON.stringify(config, null, '  ')
     try {
       await pify(fs.writeFile)(CONFIG_PATH, data, 'utf8')
@@ -44,8 +44,8 @@ function writeConfig(config) {
   })
 }
 
-function loadConfig() {
-  return new Promise(async (resolve, reject) => {
+export function loadConfig() {
+  return new Promise<Config>(async (resolve, reject) => {
     if (!fileExists(CONFIG_PATH)) {
       fs.writeFileSync(CONFIG_PATH, '[]', 'utf-8')
     }
@@ -58,8 +58,8 @@ function loadConfig() {
   })
 }
 
-function switchAccount(user) {
-  return new Promise(async (resolve, reject) => {
+export function switchAccount(user: User) {
+  return new Promise<IObject>(async (resolve, reject) => {
     const entries = {
       'user.name': user.name,
       'user.email': user.email,
@@ -74,8 +74,8 @@ function switchAccount(user) {
   })
 }
 
-function execCommand(command) {
-  return new Promise(async (resolve, reject) => {
+export function execCommand(command: Array<string>) {
+  return new Promise<string>(async (resolve, reject) => {
     try {
       const config = await gitconfig.getCombinedConfig()
       const { gtPrivateKeyPath } = config[`remote "origin"`]
@@ -95,28 +95,18 @@ function execCommand(command) {
   })
 }
 
-function getCurrentUser() {
-  return new Promise(async (resolve, reject) => {
+export function getCurrentUser() {
+  return new Promise<User>(async (resolve, reject) => {
     try {
       const config = await gitconfig.getCombinedConfig()
+      const user = {
+        name: config.user.name,
+        email: config.user.email,
+        privateKey: config[`remote "origin"`].gtPrivateKeyPath,
+      }
+      resolve(user)
     } catch (err) {
       reject(err)
     }
-    const user = {
-      name: config.user.name,
-      email: config.user.email,
-      privateKey: config[`remote "origin"`].gtPrivateKeyPath,
-    }
-    resolve(user)
   })
-}
-
-module.exports = {
-  addUser,
-  removeUser,
-  loadConfig,
-  writeConfig,
-  switchAccount,
-  execCommand,
-  getCurrentUser,
 }

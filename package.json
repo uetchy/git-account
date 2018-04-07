@@ -2,7 +2,7 @@
   "name": "git-account",
   "version": "1.0.0",
   "description": "git-account adds user management feature to `git`.",
-  "main": "lib",
+  "main": "dist",
   "scripts": {
     "test": "nyc ava --verbose",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
@@ -33,6 +33,10 @@
     "update-notifier": "^2.4.0"
   },
   "devDependencies": {
+    "@types/execa": "^0.9.0",
+    "@types/file-exists": "^4.0.0",
+    "@types/ini": "^1.3.29",
+    "@types/pify": "^3.0.1",
     "ava": "^0.25.0",
     "coveralls": "^3.0.0",
     "mockery": "^2.1.0",

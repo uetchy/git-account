@@ -19,9 +19,9 @@ lib
         message: 'select account',
         choices: users.map(value => ({
           name: `${value.name} <${value.email}>`,
-          value
-        }))
-      }
+          value,
+        })),
+      },
     ])
   })
   .then(answers => lib.switchAccount(answers.user))

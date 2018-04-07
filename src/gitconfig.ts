@@ -1,28 +1,26 @@
-const { homedir } = require('os')
-const path = require('path')
-const fs = require('fs')
-const ini = require('ini')
-const execa = require('execa')
-const pify = require('pify')
-const { promisify } = require('util')
+import { homedir } from 'os'
+import path from 'path'
+import fs from 'fs'
+import ini from 'ini'
+import execa from 'execa'
+import pify from 'pify'
 
-const CONFIG_PATH = {
+const CONFIG_PATH: IObject = {
   global: path.resolve(homedir(), '.gitconfig'),
   local: path.resolve('.git', 'config'),
 }
 
-function _merge(obj1, obj2) {
+function _merge(obj1: IObject, obj2: IObject) {
   Object.keys(obj2).forEach(key => {
     obj1[key] = obj2[key]
   })
   return obj1
 }
 
-function getConfig(scope) {
-  return new Promise(async (resolve, reject) => {
+function getConfig(scope: string) {
+  return new Promise<Config>(async (resolve, reject) => {
     try {
-      const data = await promisify(fs.readFile)(CONFIG_PATH[scope], 'utf-8')
-
+      const data = await pify(fs.readFile)(CONFIG_PATH[scope], 'utf-8')
       resolve(ini.parse(data))
     } catch (err) {
       reject(err)
@@ -30,26 +28,26 @@ function getConfig(scope) {
   })
 }
 
-function getGlobalConfig() {
+export function getGlobalConfig() {
   return getConfig('global')
 }
 
-function getLocalConfig() {
+export function getLocalConfig() {
   return getConfig('local')
 }
 
-function getCombinedConfig() {
-  return new Promise(async (resolve, reject) => {
+export function getCombinedConfig() {
+  return new Promise<Config>(async (resolve, reject) => {
     try {
       const configList = await Promise.all([getGlobalConfig(), getLocalConfig()])
-      resolve(_merge(...configList))
+      resolve(_merge(configList[0], configList[1]))
     } catch (err) {
       reject(err)
     }
   })
 }
 
-function setConfig(entries, scope = 'local') {
+function setConfig(entries: IObject, scope = 'local') {
   return new Promise(async (resolve, reject) => {
     try {
       await Promise.all(
@@ -64,18 +62,10 @@ function setConfig(entries, scope = 'local') {
   })
 }
 
-function setGlobalConfig(entries) {
+export function setGlobalConfig(entries: IObject) {
   return setConfig(entries, 'global')
 }
 
-function setLocalConfig(entries) {
+export function setLocalConfig(entries: IObject) {
   return setConfig(entries, 'local')
-}
-
-module.exports = {
-  getGlobalConfig,
-  getLocalConfig,
-  getCombinedConfig,
-  setGlobalConfig,
-  setLocalConfig,
 }

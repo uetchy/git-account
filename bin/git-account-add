@@ -15,24 +15,24 @@ const questions = [
   {
     name: 'id',
     message: 'ID',
-    default: 'john'
+    default: 'john',
   },
   {
     name: 'name',
     message: 'Name',
-    default: 'John Doe'
+    default: 'John Doe',
   },
   {
     name: 'email',
     message: 'Email',
-    default: 'john.doe@example.com'
+    default: 'john.doe@example.com',
   },
   {
     name: 'privateKey',
     message: 'Private Key',
     default: path.resolve(os.homedir(), '.ssh/id_rsa'),
-    filter: input => input.replace(/^~($|\/|\\)/, `${os.homedir()}$1`)
-  }
+    filter: input => input.replace(/^~($|\/|\\)/, `${os.homedir()}$1`),
+  },
 ]
 
 inquirer

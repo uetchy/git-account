@@ -4,7 +4,7 @@ import { join } from 'path'
 import test from 'ava'
 import mockery from 'mockery'
 
-const gitconfigPath = '../lib/gitconfig'
+const gitconfigPath = '../dist/gitconfig'
 
 const GLOBAL_CONFIG_SOURCE = fs.readFileSync(join(__dirname, 'fixture/global_config'), 'utf-8')
 const GLOBAL_CONFIG_EXPECTED = {
@@ -34,7 +34,6 @@ const LOCAL_CONFIG_EXPECTED = {
 test.serial('get global gitconfig', async t => {
   const fsMock = {
     readFile: function(path, enc, cb) {
-      console.log('FAKE', path)
       t.is(path, `${homedir()}/.gitconfig`)
       cb(null, GLOBAL_CONFIG_SOURCE)
     },
@@ -59,7 +58,6 @@ test.serial('get global gitconfig', async t => {
 test.serial('get local gitconfig', async t => {
   const fsMock = {
     readFile: function(path, enc, cb) {
-      console.log('FAKE', path)
       t.is(path, `${process.cwd()}/.git/config`)
       cb(null, LOCAL_CONFIG_SOURCE)
     },

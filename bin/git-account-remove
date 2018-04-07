@@ -18,9 +18,9 @@ lib
         message: 'select account to remove',
         choices: users.map(value => ({
           name: `${value.name} <${value.email}>`,
-          value
-        }))
-      }
+          value,
+        })),
+      },
     ])
   })
   .then(answers => lib.removeUser(answers.user.id))
