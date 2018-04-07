@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/uetchy/git-account.svg?branch=master)](https://travis-ci.org/uetchy/git-account) [![Coverage Status](https://coveralls.io/repos/github/uetchy/git-account/badge.svg?branch=master)](https://coveralls.io/github/uetchy/git-account?branch=master)
 
-`git-account` adds user management feature to `git`. It makes you able to change __user.name__, __user.email__ and __private key__ at ease.
+`git-account` adds user management feature to `git`. It makes you able to change **user.name**, **user.email** and **private key** at ease.
 
 ## tl;dr
 

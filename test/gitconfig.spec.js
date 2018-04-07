@@ -1,6 +1,6 @@
 import { homedir } from 'os'
 import fs from 'fs'
-import {join} from 'path'
+import { join } from 'path'
 import test from 'ava'
 import mockery from 'mockery'
 
@@ -10,36 +10,34 @@ const GLOBAL_CONFIG_SOURCE = fs.readFileSync(join(__dirname, 'fixture/global_con
 const GLOBAL_CONFIG_EXPECTED = {
   user: {
     name: 'Globe Trotter',
-    email: 'globe.trotter@example.com'
-  }
+    email: 'globe.trotter@example.com',
+  },
 }
 const LOCAL_CONFIG_SOURCE = fs.readFileSync(join(__dirname, 'fixture/local_config'), 'utf-8')
 const LOCAL_CONFIG_EXPECTED = {
   // eslint-disable-line quote-props
   user: {
     name: 'Local Officer',
-    email: 'local.officer@example.com'
+    email: 'local.officer@example.com',
   },
   'remote "origin"': {
     url: 'ssh://git@github.com/uetchy/git-account',
     fetch: '+refs/heads/*:refs/remotes/origin/*',
-    gtPrivateKeyPath: '~/.ssh/id_rsa_local_officer'
+    gtPrivateKeyPath: '~/.ssh/id_rsa_local_officer',
   },
   'branch "master"': {
     remote: 'origin',
-    merge: 'refs/heads/master'
-  }
+    merge: 'refs/heads/master',
+  },
 }
 
 test.serial('get global gitconfig', async t => {
   const fsMock = {
-    readFile: (path) => {
-      return new Promise((resolve, reject) => {
-        console.log("red")
-        t.is(path, `${homedir()}/.gitconfig`)
-        return resolve(GLOBAL_CONFIG_SOURCE)
-      })
-    }
+    readFile: function(path, enc, cb) {
+      console.log('FAKE', path)
+      t.is(path, `${homedir()}/.gitconfig`)
+      cb(null, GLOBAL_CONFIG_SOURCE)
+    },
   }
 
   mockery.registerAllowable(gitconfigPath)
@@ -47,12 +45,11 @@ test.serial('get global gitconfig', async t => {
   mockery.enable({
     useCleanCache: true,
     warnOnReplace: false,
-    warnOnUnregistered: false
+    warnOnUnregistered: false,
   })
 
   const gitconfig = require(gitconfigPath)
   const config = await gitconfig.getGlobalConfig()
-
   t.deepEqual(config, GLOBAL_CONFIG_EXPECTED)
 
   mockery.disable()
@@ -61,10 +58,11 @@ test.serial('get global gitconfig', async t => {
 
 test.serial('get local gitconfig', async t => {
   const fsMock = {
-    readFileSync: path => {
+    readFile: function(path, enc, cb) {
+      console.log('FAKE', path)
       t.is(path, `${process.cwd()}/.git/config`)
-      return LOCAL_CONFIG_SOURCE
-    }
+      cb(null, LOCAL_CONFIG_SOURCE)
+    },
   }
 
   mockery.registerAllowable(gitconfigPath)
@@ -72,7 +70,7 @@ test.serial('get local gitconfig', async t => {
   mockery.enable({
     useCleanCache: true,
     warnOnReplace: false,
-    warnOnUnregistered: false
+    warnOnUnregistered: false,
   })
 
   const gitconfig = require(gitconfigPath)
