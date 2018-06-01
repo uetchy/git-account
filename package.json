@@ -4,8 +4,10 @@
   "description": "git-account adds user management feature to `git`.",
   "main": "dist",
   "scripts": {
-    "test": "nyc ava --verbose",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
+    "build": "tsc",
+    "test": "npm run build && nyc ava --verbose",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "watch": "tsc -w"
   },
   "bin": {
     "git-account": "bin/git-account"
@@ -44,6 +46,6 @@
     "ava": "^0.25.0",
     "coveralls": "^3.0.1",
     "mockery": "^2.1.0",
-    "nyc": "^11.7.3"
+    "nyc": "^12.0.1"
   }
 }
