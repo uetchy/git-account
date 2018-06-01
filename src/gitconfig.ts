@@ -3,7 +3,7 @@ import path from 'path'
 import fs from 'fs'
 import ini from 'ini'
 import execa from 'execa'
-import pify from 'pify'
+import { promisify } from 'util'
 
 const CONFIG_PATH: IObject = {
   global: path.resolve(homedir(), '.gitconfig'),
@@ -20,7 +20,7 @@ function _merge(obj1: IObject, obj2: IObject) {
 function getConfig(scope: string) {
   return new Promise<Config>(async (resolve, reject) => {
     try {
-      const data = await pify(fs.readFile)(CONFIG_PATH[scope], 'utf-8')
+      const data = await promisify(fs.readFile)(CONFIG_PATH[scope], 'utf-8')
       resolve(ini.parse(data))
     } catch (err) {
       reject(err)
@@ -39,7 +39,10 @@ export function getLocalConfig() {
 export function getCombinedConfig() {
   return new Promise<Config>(async (resolve, reject) => {
     try {
-      const configList = await Promise.all([getGlobalConfig(), getLocalConfig()])
+      const configList = await Promise.all([
+        getGlobalConfig(),
+        getLocalConfig(),
+      ])
       resolve(_merge(configList[0], configList[1]))
     } catch (err) {
       reject(err)
