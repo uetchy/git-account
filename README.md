@@ -1,10 +1,23 @@
 # git-account
 
+[![npm version](https://badge.fury.io/js/git-account.svg)](https://badge.fury.io/js/git-account)
 [![Build Status](https://travis-ci.org/uetchy/git-account.svg?branch=master)](https://travis-ci.org/uetchy/git-account) [![Coverage Status](https://coveralls.io/repos/github/uetchy/git-account/badge.svg?branch=master)](https://coveralls.io/github/uetchy/git-account?branch=master)
 
 `git-account` adds user management feature to `git`. It makes you able to change **user.name**, **user.email** and **private key** at ease.
 
-## tl;dr
+## Installation
+
+```
+npm i -g git-account
+```
+
+## Usage
+
+```
+$ git account <command> [<args>]
+```
+
+## Real world example
 
 ```console
 $ git account add
@@ -31,18 +44,6 @@ privateKey /Users/uetchy/.ssh/id_rsa
 ```
 
 All config will be saved to `~/.git-account`
-
-## Installation
-
-```
-npm i -g git-account
-```
-
-## Usage
-
-```
-$ git account <command> [<args>]
-```
 
 ## Commands
 
