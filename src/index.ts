@@ -1,12 +1,6 @@
-import { homedir } from 'os'
-import fs from 'fs'
-import { join } from 'path'
-import { promisify } from 'util'
 import execa from 'execa'
-import fileExists from 'file-exists'
 import * as gitconfig from './gitconfig'
-
-const CONFIG_PATH = join(homedir(), '.git-account')
+import { loadConfig, writeConfig } from './config'
 
 export function addUser(user: User) {
   return new Promise(async (resolve, reject) => {
@@ -26,32 +20,6 @@ export function removeUser(id: string) {
       const config = await loadConfig()
       writeConfig(config.filter((user: User) => user.id !== id))
       resolve(id)
-    } catch (err) {
-      reject(err)
-    }
-  })
-}
-
-export function writeConfig(config: Config) {
-  return new Promise<Config>(async (resolve, reject) => {
-    const data = JSON.stringify(config, null, '  ')
-    try {
-      await promisify(fs.writeFile)(CONFIG_PATH, data, 'utf8')
-      resolve(config)
-    } catch (err) {
-      reject(err)
-    }
-  })
-}
-
-export function loadConfig() {
-  return new Promise<Config>(async (resolve, reject) => {
-    if (!fileExists(CONFIG_PATH)) {
-      fs.writeFileSync(CONFIG_PATH, '[]', 'utf-8')
-    }
-    try {
-      const data = await promisify(fs.readFile)(CONFIG_PATH, 'utf-8')
-      resolve(JSON.parse(data))
     } catch (err) {
       reject(err)
     }
