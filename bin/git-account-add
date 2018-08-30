@@ -15,7 +15,7 @@ const questions = [
   {
     name: 'id',
     message: 'ID',
-    default: 'john',
+    default: 'john_doe',
   },
   {
     name: 'name',
@@ -25,7 +25,7 @@ const questions = [
   {
     name: 'email',
     message: 'Email',
-    default: 'john.doe@example.com',
+    default: 'john@example.com',
   },
   {
     name: 'privateKey',

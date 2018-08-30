@@ -8,4 +8,4 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Features
 
-* Add ‘add’, ‘remove’, ‘status’ command ([b70e9e6](https://github.com/uetchy/git-account/commit/b70e9e6))
+- Add ‘add’, ‘remove’, ‘status’ command ([b70e9e6](https://github.com/uetchy/git-account/commit/b70e9e6))

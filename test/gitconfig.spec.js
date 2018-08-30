@@ -6,14 +6,20 @@ import mockery from 'mockery'
 
 const gitconfigPath = '../dist/gitconfig'
 
-const GLOBAL_CONFIG_SOURCE = fs.readFileSync(join(__dirname, 'fixture/global_config'), 'utf-8')
+const GLOBAL_CONFIG_SOURCE = fs.readFileSync(
+  join(__dirname, 'fixture/global_config'),
+  'utf-8'
+)
 const GLOBAL_CONFIG_EXPECTED = {
   user: {
     name: 'Globe Trotter',
     email: 'globe.trotter@example.com',
   },
 }
-const LOCAL_CONFIG_SOURCE = fs.readFileSync(join(__dirname, 'fixture/local_config'), 'utf-8')
+const LOCAL_CONFIG_SOURCE = fs.readFileSync(
+  join(__dirname, 'fixture/local_config'),
+  'utf-8'
+)
 const LOCAL_CONFIG_EXPECTED = {
   // eslint-disable-line quote-props
   user: {

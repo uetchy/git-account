@@ -6,7 +6,7 @@ export function addUser(user: User) {
   return new Promise(async (resolve, reject) => {
     try {
       const config = await loadConfig()
-      await writeConfig([].concat(config, user))
+      await writeConfig(Object.assign({}, config, user))
       resolve(user)
     } catch (err) {
       reject(err)
