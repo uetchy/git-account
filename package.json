@@ -1,6 +1,6 @@
 {
   "name": "git-account",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "git-account adds user management feature to `git`.",
   "main": "dist",
   "scripts": {
