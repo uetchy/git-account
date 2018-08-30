@@ -22,6 +22,7 @@ export async function loadConfig() {
   } catch (err) {
     if (err.code === 'ENOENT') {
       await promisify(fs.writeFile)(CONFIG_PATH, '[]\n', 'utf-8')
+      return []
     } else {
       throw new Error(`unhandled load config err: ${err}`)
     }

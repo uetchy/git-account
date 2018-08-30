@@ -8,7 +8,7 @@ export function addUser(user: User) {
   return new Promise(async (resolve, reject) => {
     try {
       const config = await loadConfig()
-      await writeConfig(Object.assign({}, config, user))
+      await writeConfig([...config, user])
       resolve(user)
     } catch (err) {
       reject(err)
