@@ -2,6 +2,8 @@ import execa from 'execa'
 import * as gitconfig from './gitconfig'
 import { loadConfig, writeConfig } from './config'
 
+export { loadConfig, writeConfig }
+
 export function addUser(user: User) {
   return new Promise(async (resolve, reject) => {
     try {

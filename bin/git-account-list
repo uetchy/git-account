@@ -11,11 +11,11 @@ program.parse(process.argv)
 lib
   .loadConfig()
   .then(users => {
-    // users.forEach(user => {
-    // 	console.log('\n', chalk.green(`${user.name} <${user.email}>`));
-    // 	console.log(chalk.gray(JSON.stringify(user, null, '  ')));
-    // });
-    console.log(columnify(users))
+    if (users.length > 0) {
+      console.log(columnify(users))
+    } else {
+      console.log('no users defined', chalk.green('$ git account add'))
+    }
   })
   .catch(err => {
     console.log(chalk.red('cannot find config file'), err.message)
