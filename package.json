@@ -5,7 +5,7 @@
   "author": "Yasuaki Uechi <y@uechi.io> (https://uechi.io/)",
   "main": "dist",
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf dist && tsc",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "test": "npm run build && nyc ava --verbose",
     "watch": "tsc -w"
@@ -26,7 +26,7 @@
     "coveralls": "^3.0.1",
     "mockery": "^2.1.0",
     "nyc": "^13.0.1",
-    "typescript": "^3.0.1"
+    "typescript": "^3.2.4"
   },
   "bin": {
     "git-account": "bin/git-account"
@@ -34,6 +34,10 @@
   "bugs": {
     "url": "https://github.com/uetchy/git-account/issues"
   },
+  "files": [
+    "dist",
+    "bin"
+  ],
   "homepage": "https://github.com/uetchy/git-account#readme",
   "keywords": [
     "account",
