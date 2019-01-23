@@ -23,23 +23,23 @@ $ git account <command> [<args>]
 $ git account add
 ? ID uetchy
 ? Name Yasuaki Uechi
-? Email uetchy@randompaper.co
+? Email y@uechi.io
 ? Private Key /Users/uetchy/.ssh/id_rsa
 User created
 KEY        VALUE
 id         uetchy
 name       Yasuaki Uechi
-email      uetchy@randompaper.co
+email      y@uechi.io
 privateKey /Users/uetchy/.ssh/id_rsa
 
 $ git account switch
-? choose one Yasuaki Uechi <uetchy@randompaper.co>
+? choose one Yasuaki Uechi <y@uechi.io>
 Switched
 
 $ git account status
 KEY        VALUE
 name       Yasuaki Uechi
-email      uetchy@randompaper.co
+email      y@uechi.io
 privateKey /Users/uetchy/.ssh/id_rsa
 ```
 
