@@ -37,7 +37,7 @@ const LOCAL_CONFIG_EXPECTED = {
   },
 }
 
-test.serial('get global gitconfig', async t => {
+test.serial('get global gitconfig', async (t) => {
   const fsMock = {
     readFile: function(path, enc, cb) {
       t.is(path, `${homedir()}/.gitconfig`)
@@ -61,7 +61,7 @@ test.serial('get global gitconfig', async t => {
   mockery.deregisterAll()
 })
 
-test.serial('get local gitconfig', async t => {
+test.serial('get local gitconfig', async (t) => {
   const fsMock = {
     readFile: function(path, enc, cb) {
       t.is(path, `${process.cwd()}/.git/config`)
