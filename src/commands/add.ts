@@ -1,19 +1,19 @@
 #!/usr/bin/env node
 
-import os from 'os'
-import path from 'path'
-import chalk from 'chalk'
-import fs from 'fs'
-import qoa from 'qoa'
-import columnify from 'columnify'
+import os from 'os';
+import path from 'path';
+import chalk from 'chalk';
+import fs from 'fs';
+import qoa from 'qoa';
+import columnify from 'columnify';
 
-import { addUser } from '../config'
+import {addUser} from '../config';
 
-export const command = 'add'
-export const desc = 'Add user'
-export const builder = {}
+export const command = 'add';
+export const desc = 'Add user';
+export const builder = {};
 export async function handler(argv: {}) {
-  const sshDir = path.resolve(os.homedir(), '.ssh')
+  const sshDir = path.resolve(os.homedir(), '.ssh');
   const questions = [
     {
       type: 'input',
@@ -35,10 +35,10 @@ export async function handler(argv: {}) {
         .filter((f) => !/^(config|known_hosts|.+\.pub)$/.test(f))
         .map((f) => path.join(sshDir, f)),
     },
-  ]
+  ];
 
-  const result = await qoa.prompt(questions)
-  const user = await addUser(result)
-  console.log(chalk.green('User added successfully.'))
-  console.log(columnify(user, { showHeaders: false }))
+  const result = await qoa.prompt(questions);
+  const user = await addUser(result);
+  console.log(chalk.green('User added successfully.'));
+  console.log(columnify(user, {showHeaders: false}));
 }

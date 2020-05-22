@@ -1,26 +1,26 @@
 #!/usr/bin/env node
 
-import os from 'os'
-import path from 'path'
-import chalk from 'chalk'
-import fs from 'fs'
-import qoa from 'qoa'
-import columnify from 'columnify'
+import os from 'os';
+import path from 'path';
+import chalk from 'chalk';
+import fs from 'fs';
+import qoa from 'qoa';
+import columnify from 'columnify';
 
-import { removeUser } from '../config'
-import { loadConfig } from '../config'
+import {removeUser} from '../config';
+import {loadConfig} from '../config';
 
 interface Options {
-  command: String
+  command: String;
 }
 
-const { log } = console
+const {log} = console;
 
-export const command = 'add'
-export const desc = 'Add user'
-export const builder = {}
+export const command = 'remove';
+export const desc = 'Remove users';
+export const builder = {};
 export async function handler(argv: Options) {
-  const users = await loadConfig()
+  const users = await loadConfig();
   const questions = [
     {
       type: 'interactive',
@@ -32,8 +32,8 @@ export async function handler(argv: Options) {
         value,
       })),
     },
-  ]
-  const result = await qoa.prompt(questions)
-  await removeUser(result.user.name)
-  log(chalk.green('removed'))
+  ];
+  const result = await qoa.prompt(questions);
+  await removeUser(result.user.name);
+  log(chalk.green('removed'));
 }

@@ -3,9 +3,8 @@
   "description": "git-account adds user management feature to `git`.",
   "version": "1.1.2",
   "author": "Yasuaki Uechi <y@uechi.io> (https://uechi.io/)",
-  "main": "dist",
   "scripts": {
-    "build": "shx rm -rf dist && tsc",
+    "build": "shx rm -rf dist && tsc && shx chmod +x dist/index.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "test": "yarn build && nyc ava --verbose",
     "watch": "tsc -w"
@@ -27,6 +26,8 @@
   },
   "devDependencies": {
     "@types/chalk": "^2.2.0",
+    "@types/mockery": "^1.4.29",
+    "@types/prompts": "^2.0.8",
     "@types/update-notifier": "^4.1.0",
     "@types/yargs": "^15.0.4",
     "ava": "^3.8.1",
@@ -34,26 +35,28 @@
     "mockery": "^2.1.0",
     "nyc": "^15.0.1",
     "shx": "^0.3.2",
+    "ts-node": "^8.10.1",
     "typescript": "^3.8.3"
   },
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/uetchy/git-account.git"
+  },
+  "license": "MIT",
   "bin": {
-    "git-account": "bin/git-account"
+    "git-account": "./dist/index.js"
   },
   "bugs": {
     "url": "https://github.com/uetchy/git-account/issues"
   },
-  "files": [
-    "dist"
-  ],
   "homepage": "https://github.com/uetchy/git-account#readme",
   "keywords": [
     "account",
     "git",
     "management"
-  ],
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/uetchy/git-account.git"
-  }
+  ]
 }
