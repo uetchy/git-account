@@ -1,12 +1,10 @@
 #!/usr/bin/env node
 
 import chalk from 'chalk';
-import qoa from 'qoa';
-import prompts from 'prompts';
 import columnify from 'columnify';
-
-import {switchAccount} from '../git';
+import prompts from 'prompts';
 import {loadConfig} from '../config';
+import {switchAccount} from '../git';
 
 interface Options {
   command: String;
@@ -29,9 +27,8 @@ export async function handler(argv: Options) {
     },
   ];
   const result = await prompts(questions);
-  if (!result.user) {
-    return;
-  }
+  if (!result.user) return;
+
   const user = await switchAccount(result.user);
   console.log(chalk.green('switched'));
   console.log(columnify(user));

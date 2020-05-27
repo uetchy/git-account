@@ -1,12 +1,7 @@
 #!/usr/bin/env node
 
-import os from 'os';
-import path from 'path';
 import chalk from 'chalk';
-import fs from 'fs';
-import qoa from 'qoa';
 import columnify from 'columnify';
-
 import {getCurrentUser} from '../git';
 
 interface Options {
@@ -20,7 +15,7 @@ export const desc = 'Show status';
 export const builder = {};
 export async function handler(argv: Options) {
   try {
-    const user = getCurrentUser();
+    const user = await getCurrentUser();
     log(columnify(user, {showHeaders: false}));
   } catch (err) {
     log(chalk.red('cannot find config file'), err.message);

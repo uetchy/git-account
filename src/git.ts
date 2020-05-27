@@ -1,8 +1,8 @@
-import {homedir} from 'os';
-import path from 'path';
+import execa from 'execa';
 import fs from 'fs';
 import ini from 'ini';
-import execa from 'execa';
+import {homedir} from 'os';
+import path from 'path';
 import {promisify} from 'util';
 import {User} from './config';
 
@@ -54,7 +54,10 @@ export async function switchAccount(user: User): Promise<GitConfigParams> {
   }
 }
 
-export async function runCommand(command: Array<string>) {
+export async function runCommand(
+  command: Array<string>,
+  execaOptions: execa.Options = {},
+) {
   try {
     const config = await getCombinedConfig();
     const {gtPrivateKeyPath} = config[`remote "origin"`]!;
@@ -66,7 +69,7 @@ export async function runCommand(command: Array<string>) {
       GIT_AUTHOR_NAME: name,
       GIT_AUTHOR_EMAIL: email,
     };
-    const result = await execa(command.join(' '), {env});
+    const result = await execa(command.join(' '), {env, ...execaOptions});
     return result.stdout;
   } catch (err) {
     throw new Error(err.message);

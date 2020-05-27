@@ -1,5 +1,5 @@
-import {homedir} from 'os';
 import fs from 'fs';
+import {homedir} from 'os';
 import {join} from 'path';
 import {promisify} from 'util';
 

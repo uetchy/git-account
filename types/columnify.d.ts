@@ -1,1 +1,1 @@
-declare module 'columnify'
+declare module 'columnify';

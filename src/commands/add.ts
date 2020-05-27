@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
+import chalk from 'chalk';
+import columnify from 'columnify';
+import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import chalk from 'chalk';
-import fs from 'fs';
-import qoa from 'qoa';
-import columnify from 'columnify';
-
-import {addUser} from '../config';
+import prompts from 'prompts';
+import validator from 'validator';
+import {addUser, User} from '../config';
 
 export const command = 'add';
 export const desc = 'Add user';
@@ -16,29 +16,34 @@ export async function handler(argv: {}) {
   const sshDir = path.resolve(os.homedir(), '.ssh');
   const questions = [
     {
-      type: 'input',
-      query: 'Type your name:',
-      handle: 'name',
+      type: 'text',
+      name: 'name',
+      message: 'name',
+      validate: (value) => value.length > 0,
     },
     {
-      type: 'input',
-      query: 'Type email:',
-      handle: 'email',
+      type: 'text',
+      name: 'email',
+      message: 'email',
+      validate: (value) => validator.isEmail(value),
     },
     {
-      type: 'interactive',
-      query: 'Choose your private key:',
-      handle: 'privatekey',
-      symbol: '❍',
-      menu: fs
+      type: 'select',
+      name: 'privateKey',
+      message: 'private key',
+      choices: fs
         .readdirSync(sshDir)
         .filter((f) => !/^(config|known_hosts|.+\.pub)$/.test(f))
-        .map((f) => path.join(sshDir, f)),
+        .map((f) => ({title: f, value: path.join(sshDir, f)})),
     },
-  ];
+  ] as Array<prompts.PromptObject>;
 
-  const result = await qoa.prompt(questions);
-  const user = await addUser(result);
+  const result = await prompts(questions, {
+    onCancel: () => {
+      process.exit(0);
+    },
+  });
+  const user = await addUser(result as User);
   console.log(chalk.green('User added successfully.'));
   console.log(columnify(user, {showHeaders: false}));
 }

@@ -6,6 +6,8 @@
   "scripts": {
     "build": "shx rm -rf dist && tsc && shx chmod +x dist/index.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "dev": "tsc -w",
+    "prepare": "npm run build",
     "test": "yarn build && nyc ava --verbose",
     "watch": "tsc -w"
   },
@@ -14,14 +16,11 @@
     "@types/ini": "^1.3.29",
     "chalk": "^4.0.0",
     "columnify": "^1.5.4",
-    "commander": "^5.1.0",
     "execa": "^4.0.1",
     "ini": "^1.3.5",
-    "inquirer": "^7.1.0",
     "prompts": "^2.3.2",
-    "qoa": "^0.2.0",
     "update-notifier": "^4.1.0",
-    "uuid": "^8.1.0",
+    "validator": "^13.0.0",
     "yargs": "^15.3.1"
   },
   "devDependencies": {
@@ -29,6 +28,7 @@
     "@types/mockery": "^1.4.29",
     "@types/prompts": "^2.0.8",
     "@types/update-notifier": "^4.1.0",
+    "@types/validator": "^13.0.0",
     "@types/yargs": "^15.0.5",
     "ava": "^3.8.2",
     "coveralls": "^3.1.0",
