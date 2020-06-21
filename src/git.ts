@@ -16,8 +16,8 @@ export interface ConfigPath {
 export interface GitConfigParams {
   'user.name': string;
   'user.email': string;
-  'remote.origin.gtPrivateKeyPath': string;
   'core.sshCommand': string;
+  [index: string]: string;
 }
 
 export interface Remote {
@@ -39,12 +39,23 @@ const CONFIG_PATH: ConfigPath = {
   local: path.resolve('.git', 'config'),
 };
 
+function clean<T>(arg: T): arg is Exclude<T, null> {
+  return arg !== null;
+}
+
 export async function switchAccount(user: User): Promise<GitConfigParams> {
+  const localConfig = await getLocalConfig();
+  const remotes = Object.keys(localConfig)
+    .map((k) => /^remote "(.+?)"$/.exec(k))
+    .filter(clean)
+    .map((r) => r[1]);
   const entries: GitConfigParams = {
     'user.name': user.name,
     'user.email': user.email,
-    'remote.origin.gtPrivateKeyPath': user.privateKey,
     'core.sshCommand': `ssh -i ${user.privateKey} -oIdentitiesOnly=yes`,
+    ...Object.fromEntries(
+      remotes.map((key) => [`remote.${key}.gtPrivateKeyPath`, user.privateKey]),
+    ),
   };
   try {
     setLocalConfig(entries);
