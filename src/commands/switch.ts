@@ -3,18 +3,15 @@
 import chalk from 'chalk';
 import columnify from 'columnify';
 import prompts from 'prompts';
-import {loadConfig} from '../config';
+import {loadConfig, Config} from '../config';
 import {switchAccount} from '../git';
 
 interface Options {
-  command: String;
+  command: string;
+  email?: string;
 }
 
-export const command = 'switch';
-export const desc = 'Switch user';
-export const builder = {};
-export async function handler(argv: Options) {
-  const users = await loadConfig();
+async function askUser(users: Config) {
   const questions = [
     {
       type: 'select' as const,
@@ -27,9 +24,20 @@ export async function handler(argv: Options) {
     },
   ];
   const result = await prompts(questions);
-  if (!result.user) return;
+  return result.user;
+}
 
-  const user = await switchAccount(result.user);
+export const command = 'switch';
+export const desc = 'Switch user';
+export const builder = {email: {}};
+export async function handler(argv: Options) {
+  const users = await loadConfig();
+
+  const selected =
+    users.find((user) => user.email === argv.email) || (await askUser(users));
+  if (!selected) return;
+
+  const user = await switchAccount(selected);
   console.log(chalk.green('switched'));
   console.log(columnify(user));
 }
