@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import chalk from 'chalk';
-import prompts from 'prompts';
 import {loadConfig, removeUser} from '../config';
 import {askUser} from '../interactive';
 

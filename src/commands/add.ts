@@ -5,10 +5,10 @@ import columnify from 'columnify';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import prompts from 'prompts';
 import validator from 'validator';
 
 import {addUser, User} from '../config';
+import {prompt} from '../interactive';
 
 export const command = 'add';
 export const desc = 'Add user';
@@ -17,19 +17,19 @@ export async function handler(argv: {}) {
   const sshDir = path.resolve(os.homedir(), '.ssh');
   const questions = [
     {
-      type: 'text',
+      type: 'text' as const,
       name: 'name',
       message: 'name',
-      validate: (value) => value.length > 0,
+      validate: (value: string) => value.length > 0,
     },
     {
-      type: 'text',
+      type: 'text' as const,
       name: 'email',
       message: 'email',
-      validate: (value) => validator.isEmail(value),
+      validate: (value: string) => validator.isEmail(value),
     },
     {
-      type: 'select',
+      type: 'select' as const,
       name: 'privateKey',
       message: 'private key',
       choices: fs
@@ -37,13 +37,9 @@ export async function handler(argv: {}) {
         .filter((f) => !/^(config|known_hosts|.+\.pub)$/.test(f))
         .map((f) => ({title: f, value: path.join(sshDir, f)})),
     },
-  ] as Array<prompts.PromptObject>;
+  ];
 
-  const result = await prompts(questions, {
-    onCancel: () => {
-      process.exit(0);
-    },
-  });
+  const result = await prompt(questions);
   const user = await addUser(result as User);
   console.log(chalk.green('User added successfully.'));
   console.log(columnify(user, {showHeaders: false}));

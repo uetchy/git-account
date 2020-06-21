@@ -1,6 +1,17 @@
 import {Config, User} from './config';
 import prompts from 'prompts';
 
+export async function prompt<T extends Array<prompts.PromptObject>>(
+  questions: T,
+) {
+  const result = await prompts(questions, {
+    onCancel: () => {
+      process.exit(0);
+    },
+  });
+  return result;
+}
+
 export async function askUser(users: Config) {
   const questions = [
     {
@@ -12,11 +23,7 @@ export async function askUser(users: Config) {
         value: user,
       })),
     },
-  ] as Array<prompts.PromptObject>;
-  const result = await prompts(questions, {
-    onCancel: () => {
-      process.exit(0);
-    },
-  });
+  ];
+  const result = await prompt(questions);
   return result.user as User;
 }
