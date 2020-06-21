@@ -1,7 +1,7 @@
 {
   "name": "git-account",
   "description": "git-account adds user management feature to `git`.",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "author": "Yasuaki Uechi <y@uechi.io> (https://uechi.io/)",
   "scripts": {
     "build": "shx rm -rf dist && tsc && shx chmod +x dist/index.js",
