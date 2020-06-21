@@ -7,7 +7,7 @@
     "build": "shx rm -rf dist && tsc && shx chmod +x dist/index.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "dev": "tsc -w",
-    "prepare": "npm run build",
+    "prepublish": "npm run build",
     "test": "yarn build && nyc ava --verbose",
     "watch": "tsc -w"
   },
