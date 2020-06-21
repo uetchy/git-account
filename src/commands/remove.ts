@@ -3,36 +3,24 @@
 import chalk from 'chalk';
 import prompts from 'prompts';
 import {loadConfig, removeUser} from '../config';
+import {askUser} from '../interactive';
 
 interface Options {
   command: String;
+  email?: string;
 }
-
-const {log} = console;
 
 export const command = 'remove';
 export const desc = 'Remove users';
 export const builder = {};
 export async function handler(argv: Options) {
   const users = await loadConfig();
-  const questions = [
-    {
-      type: 'select',
-      name: 'user',
-      message: 'Select account to remove',
-      choices: users.map((value) => ({
-        title: `${value.name} <${value.email}>`,
-        value,
-      })),
-    },
-  ] as Array<prompts.PromptObject>;
-  const result = await prompts(questions, {
-    onCancel: () => {
-      process.exit(0);
-    },
-  });
-  if (!result.user) return;
-  console.log(result);
-  await removeUser(result.user.email);
-  log(chalk.green('removed'));
+  const selected =
+    users.find((user) => user.email === argv.email) || (await askUser(users));
+  if (!selected) return;
+
+  console.log(selected);
+
+  await removeUser(selected.email);
+  console.log(chalk.green('removed'));
 }

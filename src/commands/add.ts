@@ -7,6 +7,7 @@ import os from 'os';
 import path from 'path';
 import prompts from 'prompts';
 import validator from 'validator';
+
 import {addUser, User} from '../config';
 
 export const command = 'add';
